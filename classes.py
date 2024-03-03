@@ -50,7 +50,7 @@ class Record:
         found = False
         for phone in self.phones:
             if phone.value == old_phone:
-                if not self.is_valid_phone(new_phone):
+                if not len(phone) == 10 and phone.isdigit():
                     raise ValueError("New phone number is invalid.")
                 phone.value = new_phone
                 found = True
@@ -58,9 +58,9 @@ class Record:
         if not found:
             raise ValueError(f"Phone number {old_phone} not found in contacts.")
 
-    @staticmethod
-    def is_valid_phone(phone_number):
-        return len(phone_number) == 10 and phone_number.isdigit()
+    # @staticmethod
+    # def is_valid_phone(phone_number):
+    #     return len(phone_number) == 10 and phone_number.isdigit()
 
     def find_phone(self, phone):
         for p in self.phones:
@@ -76,6 +76,7 @@ class Record:
         return f"Contact name: {self.name}, phones: {phone_numbers}"
 
 class AddressBook(UserDict):
+    
     def __init__(self):
         self.data = {}
 
@@ -93,16 +94,11 @@ class AddressBook(UserDict):
         if name in self.data:
             del self.data[name]
 
-    def __str__(self):
-        records_info = '\n'.join(str(record) for record in self.data.values())
-        return f"Address Book:\n{records_info}"
-    
-    @staticmethod
-    def get_upcoming_birthdays(users=None):
-        tdate = dtdt.now().date()  # Змінено
+    def get_upcoming_birthdays(self):
+        tdate = dtdt.now().date()  
         birthdays = []
-        for user in users:
-            bdate = user.birthday.value.date()  # Змінено
+        for user in self.data.values():  
+            bdate = user.birthday.value.date()  
             bdate = bdate.replace(year=tdate.year)
             days_between = (bdate - tdate).days
             if 0 <= days_between < 7:
@@ -114,5 +110,3 @@ class AddressBook(UserDict):
                     elif (bdate + dt.timedelta(days=2)).weekday() == 0:
                         birthdays.append({'name': user.name.value, 'birthday': (bdate + dt.timedelta(days=2)).strftime("%d.%m.%Y")})
         return birthdays
-
-

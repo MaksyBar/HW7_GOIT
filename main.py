@@ -23,18 +23,27 @@ def input_error(func):
 
 @input_error
 def add_contact(args, contacts):
-    name, phone = args
-    record = Record(name)
-    record.add_phone(phone)
-    contacts[name] = record
-    return "Contact added."
+    name, *phones = args
+    if name in contacts:
+        record = contacts[name]
+        for phone in phones:
+            record.add_phone(phone)
+        return "Phone(s) added to existing contact."
+    else:
+        record = Record(name)
+        for phone in phones:
+            record.add_phone(phone)
+        contacts[name] = record
+        return "Contact added."
 
 @input_error
 def change_contact(args, contacts):
-    name, new_phone = args
+    name, *phones = args
     if name in contacts:
-        contacts[name] = new_phone
-        return "Contact updated."
+        record = contacts[name]
+        for phone in phones:
+            record.add_phone(phone)
+        return "Phone(s) added to existing contact."
     else:
         return "Contact not found."
 
@@ -73,11 +82,12 @@ def show_birthday(args, contacts):
     
 @input_error
 def birthdays(contacts):
-    upcoming_birthdays = AddressBook.get_upcoming_birthdays(contacts.values())
+    upcoming_birthdays = contacts.get_upcoming_birthdays()
     if upcoming_birthdays:
         return "Upcoming birthdays:\n" + "\n".join(f"{contact['name']}: {contact['birthday']}" for contact in upcoming_birthdays)
     else:
         return "No upcoming birthdays."
+
 
 def main():
     book = AddressBook()
