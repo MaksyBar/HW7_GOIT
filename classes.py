@@ -39,6 +39,7 @@ class Record:
         self.name = Name(name)
         self.phones = []
         self.birthday = None
+        
 
     def add_phone(self, phone):
         self.phones.append(Phone(phone))
@@ -46,17 +47,26 @@ class Record:
     def add_birthday(self, value):
         self.birthday = Birthday(value)
 
+    # def edit_phone(self, old_phone, new_phone):
+    #     found = False
+    #     for phone in self.phones:
+    #         if phone.value == old_phone:
+    #             if not len(phone) == 10 and phone.isdigit():
+    #                 raise ValueError("New phone number is invalid.")
+    #             phone.value = new_phone
+    #             found = True
+    #             break
+    #     if not found:
+    #         raise ValueError(f"Phone number {old_phone} not found in contacts.")
+
     def edit_phone(self, old_phone, new_phone):
-        found = False
         for phone in self.phones:
             if phone.value == old_phone:
-                if not len(phone) == 10 and phone.isdigit():
-                    raise ValueError("New phone number is invalid.")
                 phone.value = new_phone
-                found = True
                 break
-        if not found:
-            raise ValueError(f"Phone number {old_phone} not found in contacts.")
+            else:
+                raise ValueError
+                
 
     # @staticmethod
     # def is_valid_phone(phone_number):
@@ -74,6 +84,8 @@ class Record:
     def __str__(self):
         phone_numbers = "; ".join(str(phone) for phone in self.phones)
         return f"Contact name: {self.name}, phones: {phone_numbers}"
+        birthday_info = f", birthday: {self.birthday.value.strftime('%d.%m.%Y')}" if self.birthday else ""
+        return f"Contact name: {self.name}, phones: {phone_numbers}{birthday_info}"
 
 class AddressBook(UserDict):
     

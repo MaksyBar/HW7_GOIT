@@ -60,7 +60,10 @@ def show_all(contacts):
     if not contacts:
         return "No contacts found."
     else:
-        all_contacts = "\n".join(f"{name}: {phone}" for name, phone in contacts.items())
+    
+        all_contacts = "\n".join(str(record) for record in contacts.values())
+        # all_contacts = "\n".join(f"{name}: {phone}" for name, phone in contacts.items())
+        
         return f"All contacts:\n{all_contacts}"
     
 @input_error
