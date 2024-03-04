@@ -21,20 +21,33 @@ def input_error(func):
 
     return inner
 
+# @input_error
+# def add_contact(args, contacts):
+#     name, *phones = args
+#     if name in contacts:
+#         record = contacts[name]
+#         for phone in phones:
+#             record.add_phone(phone)
+#         return "Phone(s) added to existing contact."
+#     else:
+#         record = Record(name)
+#         for phone in phones:
+#             record.add_phone(phone)
+#         contacts[name] = record
+#         return "Contact added."
+
 @input_error
-def add_contact(args, contacts):
-    name, *phones = args
-    if name in contacts:
-        record = contacts[name]
-        for phone in phones:
-            record.add_phone(phone)
-        return "Phone(s) added to existing contact."
-    else:
+def add_contact(args, book: AddressBook):
+    name, phone, *_ = args
+    record = book.find(name)
+    message = "Contact updated."
+    if record is None:
         record = Record(name)
-        for phone in phones:
-            record.add_phone(phone)
-        contacts[name] = record
-        return "Contact added."
+        book.add_record(record)
+        message = "Contact added."
+    if phone:
+        record.add_phone(phone)
+    return message
 
 @input_error
 def change_contact(args, contacts):
